@@ -18,7 +18,8 @@
 import { execFileSync } from 'node:child_process';
 import { mkdtempSync, readFileSync, writeFileSync, existsSync } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { NodeIO, getBounds } from '@gltf-transform/core';
 import { ALL_EXTENSIONS, KHRMaterialsUnlit } from '@gltf-transform/extensions';
 
@@ -32,6 +33,9 @@ if (!entrada || !nombre || !salida || Number.isNaN(giro)) {
 const IMG_ANCHO = 1024;
 const IMG_ALTO = 256;
 
+// Logo que va a la izquierda del nombre (si existe)
+const LOGO = join(dirname(fileURLToPath(import.meta.url)), '..', 'assets', 'logo.png');
+
 // 1. Dibujar la imagen del letrero con Edge (sin fondo, bordes redondos)
 function dibujarLetrero(texto) {
   const edge = [
@@ -44,6 +48,9 @@ function dibujarLetrero(texto) {
   const html = join(carpeta, 'letrero.html');
   const png = join(carpeta, 'letrero.png');
   const seguro = texto.replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+  const logo = existsSync(LOGO)
+    ? `<div class="logo"><img src="data:image/png;base64,${readFileSync(LOGO).toString('base64')}"></div>`
+    : '';
 
   writeFileSync(html, `<!doctype html><meta charset="utf-8">
 <style>
@@ -51,8 +58,8 @@ function dibujarLetrero(texto) {
   .letrero {
     box-sizing: border-box;
     width: ${IMG_ANCHO}px; height: ${IMG_ALTO}px;
-    display: flex; align-items: center; justify-content: center;
-    padding: 0 60px;
+    display: flex; align-items: center; gap: 28px;
+    padding: 0 60px 0 ${logo ? 22 : 60}px;
     border: 10px solid #e0892e;
     border-radius: ${IMG_ALTO / 2}px;
     background: #1c1410;
@@ -60,13 +67,24 @@ function dibujarLetrero(texto) {
     font: 700 120px "Segoe UI", system-ui, sans-serif;
     white-space: nowrap;
   }
+  .logo {
+    flex: none;
+    width: 196px; height: 196px;
+    border-radius: 50%;
+    overflow: hidden;
+    background: #fff;
+    display: grid; place-items: center;
+  }
+  .logo img { width: 168px; height: 168px; object-fit: contain; }
+  .texto { flex: 1; display: flex; justify-content: center; min-width: 0; }
 </style>
-<div class="letrero"><span id="t">${seguro}</span></div>
+<div class="letrero">${logo}<div class="texto"><span id="t">${seguro}</span></div></div>
 <script>
   // Achicar la letra si el nombre es muy largo
   const t = document.getElementById('t');
+  const espacio = t.parentElement.clientWidth;
   let size = 120;
-  while (t.offsetWidth > ${IMG_ANCHO - 140} && size > 40) t.style.fontSize = (size -= 4) + 'px';
+  while (t.offsetWidth > espacio && size > 40) t.style.fontSize = (size -= 4) + 'px';
 </script>`);
 
   execFileSync(edge, [
