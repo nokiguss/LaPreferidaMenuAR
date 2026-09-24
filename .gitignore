@@ -1,0 +1,6 @@
+# Escaneos originales (sin procesar) - la pagina usa los de models/
+Yoshis01/
+node_modules/
+.DS_Store
+
+*.zip

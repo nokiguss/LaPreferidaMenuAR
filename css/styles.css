@@ -1,0 +1,126 @@
+:root {
+  --fondo: #1c1410;
+  --tarjeta: #2a1f18;
+  --borde: #3d2e24;
+  --texto: #f5ebe0;
+  --suave: #c9b8a6;
+  --acento: #e0892e;
+}
+
+* { box-sizing: border-box; }
+
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  background: var(--fondo);
+  color: var(--texto);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+body {
+  min-height: 100vh;
+  padding: env(safe-area-inset-top) 16px env(safe-area-inset-bottom);
+  max-width: 560px;
+  margin: 0 auto;
+}
+
+/* Encabezado */
+.encabezado {
+  text-align: center;
+  padding: 28px 0 20px;
+}
+.encabezado h1 {
+  margin: 0;
+  font-size: 2rem;
+  letter-spacing: 0.02em;
+  color: var(--acento);
+}
+.encabezado p {
+  margin: 6px 0 0;
+  color: var(--suave);
+}
+
+/* Lista de tacos */
+.lista {
+  display: grid;
+  gap: 12px;
+  padding-bottom: 32px;
+}
+.tarjeta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 18px 20px;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  background: var(--tarjeta);
+  color: var(--texto);
+  font: inherit;
+  font-size: 1.15rem;
+  text-align: left;
+  cursor: pointer;
+}
+.tarjeta:active { transform: scale(0.98); }
+.tarjeta-icono { font-size: 1.8rem; }
+
+/* Visor 3D */
+.visor { padding-bottom: 32px; }
+
+.volver {
+  background: none;
+  border: none;
+  color: var(--suave);
+  font: inherit;
+  font-size: 1rem;
+  padding: 4px 0 12px;
+  cursor: pointer;
+}
+
+model-viewer {
+  width: 100%;
+  height: 60vh;
+  min-height: 320px;
+  border-radius: 18px;
+  background: radial-gradient(circle at 50% 40%, #3a2a1f, var(--tarjeta));
+  --poster-color: transparent;
+}
+
+.boton-ar {
+  position: absolute;
+  left: 50%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 14px 26px;
+  border: none;
+  border-radius: 999px;
+  background: var(--acento);
+  color: #1c1410;
+  font: inherit;
+  font-size: 1.05rem;
+  font-weight: 700;
+  white-space: nowrap;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+  cursor: pointer;
+}
+
+.cargando {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: var(--suave);
+}
+
+.nombre {
+  text-align: center;
+  margin: 18px 0 4px;
+  font-size: 1.6rem;
+}
+
+.aviso {
+  text-align: center;
+  color: var(--suave);
+  font-size: 0.95rem;
+}
