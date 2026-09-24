@@ -16,9 +16,16 @@ models/         Archivos 3D (.glb) de cada taco
 
 ## Agregar un taco nuevo
 
-1. Exporta el escaneo como **.glb** (desde Polycam o RealityScan), en **tamaño real**.
-2. Cópialo a la carpeta `models/`, por ejemplo `models/taco-dorado.glb`.
-3. En `js/tacos.js`, cambia el `modelo` de ese taco a `'models/taco-dorado.glb'`.
+1. Exporta el escaneo como **.glb** (desde Polycam o RealityScan) y mide el taco real con una cinta.
+2. Ajusta el escaneo (juntar texturas, centrar, tamaño) y guárdalo en `modelos-base/`, por ejemplo `modelos-base/taco-dorado.glb`.
+3. Agrégale el letrero flotante con su nombre (desde la carpeta `herramientas`, la primera vez corre `npm install`):
+   ```
+   node letrero.mjs ../modelos-base/taco-dorado.glb "Taco Dorado" ../models/taco-dorado-v1.glb 90
+   ```
+   El último número (opcional) gira el producto para que quede de frente. Si en la página sale de lado o de espaldas, prueba con 0, 90, -90 o 180.
+4. En `js/tacos.js`, cambia el `modelo` de ese taco a `'models/taco-dorado-v1.glb'`.
+
+Cada vez que cambies un modelo, súbele el número de versión al nombre (`-v2`, `-v3`…) para que los celulares no se queden con el anterior guardado.
 
 Recomendación: que cada archivo pese **menos de 5 MB** para que cargue rápido con datos del celular.
 
