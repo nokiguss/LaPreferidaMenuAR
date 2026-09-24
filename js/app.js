@@ -21,6 +21,17 @@ function pintarLista() {
   });
 }
 
+// Agrega el nombre del taco al link del modelo para que lo muestren los visores de AR:
+//   ?title=...          → título arriba en el visor de Google (Android)
+//   #checkoutTitle=...  → letrero abajo en el visor de Apple (iPhone)
+function conNombre(taco) {
+  const nombre = encodeURIComponent(taco.nombre);
+  return `${taco.modelo}?title=${nombre}`
+    + `#checkoutTitle=${nombre}`
+    + `&checkoutSubtitle=${encodeURIComponent('La Preferida')}`
+    + `&callToAction=${encodeURIComponent('Ver más tacos')}`;
+}
+
 function mostrar() {
   const taco = TACOS.find((t) => t.id === location.hash.slice(1));
 
@@ -37,7 +48,8 @@ function mostrar() {
   modelo.alt = `Taco en 3D: ${taco.nombre}`;
   cargando.hidden = false;
   cargando.textContent = 'Cargando…';
-  modelo.src = taco.modelo;
+  document.getElementById('etiqueta-ar').textContent = taco.nombre;
+  modelo.src = conNombre(taco);
   window.scrollTo(0, 0);
 }
 
@@ -51,6 +63,9 @@ modelo.addEventListener('error', () => {
     ? 'No se puede cargar abriendo el archivo directo. Abre la página desde el servidor (http://localhost:5173).'
     : 'No se pudo cargar el taco. Revisa tu conexión e inténtalo de nuevo.';
 });
+
+// En iPhone, el botón "Ver más tacos" del letrero cierra la cámara: regresamos a la lista
+modelo.addEventListener('quick-look-button-tapped', () => { location.hash = ''; });
 
 document.getElementById('volver').addEventListener('click', () => {
   history.length > 1 ? history.back() : (location.hash = '');
